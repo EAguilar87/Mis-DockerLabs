@@ -1,0 +1,7 @@
+Writeup – Máquina “Obsession”
+-----------------------------
+Luego de desplegar la maquina vulnerable vamos al siguiente paso.
+
+Se realizará un escaneo de puertos para identificar los servicios activos en la maquina 
+objetivo, utilizando Nmap con el siguiente parametro:
+sudo nmap -p- --open -sS -sCV --min-rate 5000 -Pn -n -oN obsession.txt 172.17.0.2
